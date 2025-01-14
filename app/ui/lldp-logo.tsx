@@ -1,12 +1,21 @@
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "app/ui/fonts";
+import Image from "next/image";
 
-export default function AcmeLogo() {
+export default function LldpLogo({
+  clickable = false,
+  height,
+  width,
+}: {
+  clickable?: boolean;
+  height: number;
+  width: number;
+}) {
   return (
-    <div
-      className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
-    >
-      <p className="text-[44px]">LLdP icon</p>
-    </div>
+    <Image
+      src="/Les_Legendes_De_precios_4x-1.png"
+      width={width}
+      height={height}
+      alt="Logo les legendes de precios"
+    />
   );
 }
