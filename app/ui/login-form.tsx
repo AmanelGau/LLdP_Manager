@@ -20,8 +20,8 @@ export default function LoginForm() {
   return (
     <form action={formAction} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`${lusitana.className} mb-3 text-2xl`}>
-          Veuillez vous connecter pour continuer.
+        <h1 className={`${lusitana.className} mb-3 text-2xl text-center`}>
+          Connexion
         </h1>
         <div className="w-full">
           <div>
@@ -64,8 +64,12 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        <Button className="mt-4 w-full" aria-disabled={isPending}>
-          Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+        <Button
+          className="mt-4 w-[200px] justify-self-end"
+          aria-disabled={isPending}
+        >
+          Se connecter
+          <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </Button>
         <div className="flex h-8 items-end space-x-1">
           {errorMessage && (
