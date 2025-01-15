@@ -6,6 +6,7 @@ import { db } from "app/db";
 import bcrypt from "bcrypt";
 import { usersTable } from "app/db/schema";
 import { eq } from "drizzle-orm";
+// import EmailProvider from "next-auth/providers/nodemailer";
 
 async function getUser(
   email: string
@@ -44,5 +45,10 @@ export const { auth, signIn, signOut } = NextAuth({
         return null;
       },
     }),
+    // EmailProvider({
+    //   server: process.env.EMAIL_SERVER,
+    //   from: process.env.EMAIL_FROM,
+    //   // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
+    // }),
   ],
 });

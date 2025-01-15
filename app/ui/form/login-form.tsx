@@ -7,9 +7,10 @@ import {
   KeyIcon,
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { Button } from "./button";
+import { Button } from "../button";
 import { useActionState } from "react";
 import { authenticate } from "app/lib/actions";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [errorMessage, formAction, isPending] = useActionState(
@@ -67,7 +68,7 @@ export default function LoginForm() {
           </div>
         </div>
         <Button
-          className="mt-4 w-[200px] justify-self-end "
+          className="mt-4 w-full justify-self-end "
           aria-disabled={isPending}
         >
           Se connecter
@@ -80,6 +81,14 @@ export default function LoginForm() {
               <p className="text-sm text-red-500">{errorMessage}</p>
             </>
           )}
+        </div>
+        <div className="flex justify-between text-blue-500">
+          <Link href="/signup" className="hover:text-purple-600">
+            Créer un compte
+          </Link>
+          <Link href="/forgotpwd" className="hover:text-purple-600">
+            Mot de passe oublié ?
+          </Link>
         </div>
       </div>
     </form>

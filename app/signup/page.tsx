@@ -1,9 +1,9 @@
 import LldpLogo from "@/app/ui/lldp-logo";
-import LoginForm from "@/app/ui/form/login-form";
+import SignuForm from "@/app/ui/form/signup-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Connexion",
+  title: "Creation de compte",
 };
 
 export default function LoginPage() {
@@ -15,7 +15,7 @@ export default function LoginPage() {
             <LldpLogo height={370} width={600} />
           </div>
         </div>
-        <LoginForm />
+        <SignuForm />
       </div>
     </main>
   );
