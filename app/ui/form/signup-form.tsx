@@ -9,12 +9,15 @@ import {
 import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { Button } from "../button";
 import { useActionState, useState } from "react";
-import { signup, State } from "app/lib/actions";
+import { AuthActions } from "app/lib/actions";
 import Link from "next/link";
 
 export default function LoginForm() {
-  const initialState: State = { message: null, errors: {} };
-  const [error, formAction, isPending] = useActionState(signup, initialState);
+  const initialState: AuthActions.State = { message: null, errors: {} };
+  const [error, formAction, isPending] = useActionState(
+    AuthActions.signup,
+    initialState
+  );
 
   return (
     <form action={formAction} className="space-y-3">

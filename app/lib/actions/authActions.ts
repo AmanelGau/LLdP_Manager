@@ -1,10 +1,10 @@
 "use server";
 
-import { signIn } from "auth";
+import { signIn, signOut } from "auth";
 import { AuthError } from "next-auth";
 import { db } from "app/db";
 import { z } from "zod";
-import { usersTable } from "../db/schema";
+import { usersTable } from "../../db/schema";
 import bcrypt from "bcrypt";
 
 export type State = {
@@ -91,4 +91,8 @@ export async function signup(prevState: State | undefined, formData: FormData) {
     }
     throw error;
   }
+}
+
+export async function signout() {
+  await signOut();
 }
