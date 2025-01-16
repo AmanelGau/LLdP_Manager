@@ -6,7 +6,7 @@ const header = async () => {
   const session = await auth();
 
   return (
-    <div className="flex justify-between items-center h-full w-full text-gray-300">
+    <div className="flex justify-between items-center h-full w-full">
       <div className="ml-6 mr-6">
         <LldpLogo clickable width={78} height={48} />
       </div>

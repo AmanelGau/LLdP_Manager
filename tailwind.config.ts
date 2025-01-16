@@ -8,28 +8,44 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "class",
   theme: {
-    extend: {
-      gridTemplateColumns: {
-        "13": "repeat(13, minmax(0, 1fr))",
-      },
-      colors: {
-        blue: {
-          400: "#2589FE",
-          500: "#0070F3",
-          600: "#2F6FEB",
-        },
-      },
-    },
-    keyframes: {
-      shimmer: {
-        "100%": {
-          transform: "translateX(100%)",
-        },
-      },
-    },
+    extend: {},
   },
-  plugins: [require("@tailwindcss/forms"), nextui()],
+  darkMode: "class",
+  plugins: [
+    nextui({
+      prefix: "nextui", // prefix for themes variables
+      addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
+      defaultTheme: "light", // default theme from the themes object
+      defaultExtendTheme: "light", // default theme to extend on custom themes
+      layout: {}, // common layout tokens (applied to all themes)
+      themes: {
+        light: {
+          colors: {
+            // light theme colors
+            primary: {
+              DEFAULT: "#9333ea",
+              foreground: "#fffff",
+            },
+            background: "#e2e8f0",
+            foreground: "#020617",
+            content1: "#f1f5f9",
+          },
+        },
+        dark: {
+          colors: {
+            // dark theme colors
+            primary: {
+              DEFAULT: "#9333ea",
+              foreground: "#fffff",
+            },
+            background: "#020617",
+            foreground: "#cbd5e1",
+            content1: "#0f172a",
+          },
+        },
+      },
+    }),
+  ],
 };
 export default config;

@@ -30,8 +30,7 @@ const burgerMenu = () => {
     }
   };
 
-  const iconClasses =
-    "max-h-[20px] text-xl text-default-500 pointer-events-none flex-shrink-0";
+  const iconClasses = "max-h-[20px] text-xl pointer-events-none flex-shrink-0";
 
   return (
     <Dropdown>
@@ -41,7 +40,6 @@ const burgerMenu = () => {
       <DropdownMenu
         aria-label="Dropdown menu with icons"
         variant="bordered"
-        className="text-gray-300"
         onAction={(key) => {
           handleAction(key);
         }}
