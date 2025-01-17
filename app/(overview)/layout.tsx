@@ -1,5 +1,5 @@
-import SideNav from "@/app/ui/user/sidenav";
-import Header from "@/app/ui/user/header";
+import SideNav from "@/app/ui/layout/sidenav";
+import Header from "@/app/ui/layout/header";
 
 export const experimental_ppr = true;
 
