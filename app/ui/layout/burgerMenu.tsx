@@ -11,6 +11,7 @@ import {
   Bars3Icon,
   ArrowRightStartOnRectangleIcon,
   Cog8ToothIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { Key } from "react";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,9 @@ const burgerMenu = () => {
         break;
       case "params":
         router.push("/params");
+        break;
+      case "changeCharacter":
+        router.push("/changeCharacter");
         break;
     }
   };
@@ -44,6 +48,12 @@ const burgerMenu = () => {
           handleAction(key);
         }}
       >
+        <DropdownItem
+          key="changeCharacter"
+          startContent={<UserGroupIcon className={iconClasses} />}
+        >
+          Changer de personnage
+        </DropdownItem>
         <DropdownItem
           key="params"
           startContent={<Cog8ToothIcon className={iconClasses} />}
