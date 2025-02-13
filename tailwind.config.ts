@@ -25,11 +25,13 @@ const config: Config = {
             // light theme colors
             primary: {
               DEFAULT: "#9333ea",
-              foreground: "#fffff",
+              foreground: "#ffffff",
             },
             background: "#e2e8f0",
             foreground: "#020617",
             content1: "#f1f5f9",
+            content2: "#E2EBF3",
+            content3: "#E2EBF3",
           },
         },
         dark: {
@@ -37,11 +39,12 @@ const config: Config = {
             // dark theme colors
             primary: {
               DEFAULT: "#9333ea",
-              foreground: "#fffff",
+              foreground: "#ffffff",
             },
             background: "#020617",
             foreground: "#cbd5e1",
             content1: "#0f172a",
+            content2: "#091121",
           },
         },
       },
