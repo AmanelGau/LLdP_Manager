@@ -25,8 +25,8 @@ const burgerMenu = () => {
       case "logout":
         signout();
         break;
-      case "params":
-        router.push("/params");
+      case "settings":
+        router.push("/settings");
         break;
       case "changeCharacter":
         router.push("/changeCharacter");
@@ -55,7 +55,7 @@ const burgerMenu = () => {
           Changer de personnage
         </DropdownItem>
         <DropdownItem
-          key="params"
+          key="settings"
           startContent={<Cog8ToothIcon className={iconClasses} />}
         >
           Paramètres

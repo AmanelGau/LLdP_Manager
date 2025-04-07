@@ -46,6 +46,7 @@ export const characterTable = pgTable("character", {
   stats: uuid()
     .references(() => statsTable.id)
     .notNull(),
+  image: varchar({ length: 255 }),
 });
 
 export const relationsTable = pgTable("relations", {

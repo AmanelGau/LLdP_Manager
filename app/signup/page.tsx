@@ -1,5 +1,5 @@
 import LldpLogo from "@/app/ui/lldp-logo";
-import SignuForm from "@/app/ui/form/signup-form";
+import SignuForm from "@/app/ui/form/signupForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

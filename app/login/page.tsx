@@ -1,5 +1,5 @@
 import LldpLogo from "@/app/ui/lldp-logo";
-import LoginForm from "@/app/ui/form/login-form";
+import LoginForm from "@/app/ui/form/loginForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

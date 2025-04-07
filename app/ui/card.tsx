@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { ReactNode } from "react";
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 

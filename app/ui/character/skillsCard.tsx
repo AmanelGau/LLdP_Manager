@@ -5,10 +5,14 @@ import TabCard from "../tabCard";
 import Table from "../table";
 import { StatsType } from "@/app/lib/actions/characterActions";
 import { SkillActions } from "@/app/lib/actions";
-import { CharacterSkillLinkTable, SkillTable } from "@/app/db/schema";
+import {
+  CharacterSkillLinkTable,
+  SkillTable,
+  statsTable,
+} from "@/app/db/schema";
 
 interface Props {
-  stats: StatsType;
+  stats: typeof statsTable.$inferSelect;
   skills: {
     skill: typeof SkillTable.$inferSelect;
     characterSkillLink: typeof CharacterSkillLinkTable.$inferSelect | null;
@@ -72,10 +76,6 @@ const SkillsCard = ({ stats, skills }: Props) => {
     { name: "sociable", label: "Sociable", points: stats.sociable },
   ];
 
-  Object.entries(stats)
-    .filter((entry) => entry[0] !== "id")
-    .map((stat) => <TabNode label={stat[0]} points={stat[1]} />);
-
   return (
     <TabCard
       tabs={tabs}
@@ -112,7 +112,7 @@ const SkillsCard = ({ stats, skills }: Props) => {
             (skill.total === 70 || skill.total === 80
               ? "via-primary"
               : skill.total > skill.base
-              ? "via-yellow-400"
+              ? "via-yellow-300"
               : "") +
             " bg-gradient-to-r from-[1%] from-content2 to-content2 to-[99%]"
           );

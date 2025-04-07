@@ -1,9 +1,10 @@
 import React from "react";
 import Card from "../card";
 import { RelationsType } from "@/app/lib/actions/characterActions";
+import { relationsTable } from "@/app/db/schema";
 
 interface Props {
-  relations: RelationsType;
+  relations: typeof relationsTable.$inferSelect;
 }
 
 const RelationCard = ({ relations }: Props) => {

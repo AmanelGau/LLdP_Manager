@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 interface Props {
   headers: { [key: string]: string };
-  data: { [key: string]: string | number | null }[];
+  data: { [key: string]: any }[];
   rowClassName?: (data: { [key: string]: string | number | null }) => string;
 }
 
@@ -15,14 +15,16 @@ const Row = ({
   headers,
 }: {
   className?: string;
-  el: { [key: string]: string | number | null };
+  el: { [key: string]: any };
   index: number;
   headers: { [key: string]: string };
 }) => {
   return (
     <tr key={`row-${index}`} className={clsx("h-10", className)}>
       {Object.keys(headers).map((key) => (
-        <td key={`item-${index}-${key}`}>{el[key]}</td>
+        <td className="w-full" key={`item-${index}-${key}`}>
+          {el[key]}
+        </td>
       ))}
     </tr>
   );

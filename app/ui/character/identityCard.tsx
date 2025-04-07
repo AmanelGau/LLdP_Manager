@@ -9,10 +9,11 @@ import {
   StatsType,
 } from "@/app/lib/actions/characterActions";
 import NumberInuptOnclick from "../numberInuptOnclick";
+import { characterTable, statsTable } from "@/app/db/schema";
 
 interface Props {
-  characterData: CharacterType;
-  stats: StatsType;
+  characterData: typeof characterTable.$inferSelect;
+  stats: typeof statsTable.$inferSelect;
 }
 
 const IdentityCard = ({ characterData, stats }: Props) => {
@@ -102,7 +103,7 @@ const IdentityCard = ({ characterData, stats }: Props) => {
           <div>Race: {characterData.race}</div>
           <div>Groupe de métier : {characterData.jobGroup}</div>
           <div>Qualité : {characterData.quality}</div>
-          <div>Défault : {characterData.fault}</div>
+          <div>Défaut : {characterData.fault}</div>
           <div>Métier : {characterData.job}</div>
           <div>Magie : {characterData.magic}</div>
           <div>Religion : {characterData.religion} </div>

@@ -1,29 +1,46 @@
 import { CharacterActions, SkillActions } from "@/app/lib/actions";
 import BottomEditButton from "@/app/ui/bottomEditButton";
 import GlobalInfo from "@/app/ui/character/identityCard";
+import NoteCard from "@/app/ui/character/noteCard";
 import RelationCard from "@/app/ui/character/relationCard";
 import SkillsCard from "@/app/ui/character/skillsCard";
 import { auth } from "@/auth";
-import React from "react";
+import Link from "next/link";
 
 const page = async () => {
   const session = await auth();
-  console.log("session", session);
-  const characterData = (
-    await CharacterActions.getCharacter(session?.user?.email!)
-  )[0];
+  const characterData = await CharacterActions.getCharacter(
+    session?.user?.email!
+  );
 
-  const skills = await SkillActions.getSkills(characterData.character.id);
+  const skills =
+    characterData.length >= 1
+      ? await SkillActions.getSkills(characterData[0].character.id)
+      : null;
 
   return (
-    <main>
-      <GlobalInfo
-        characterData={characterData.character}
-        stats={characterData.stats}
-      />
-      <RelationCard relations={characterData.relations} />
-      <SkillsCard stats={characterData.stats} skills={skills} />
-      <BottomEditButton link="/character/edit" />
+    <main className="h-full">
+      {characterData.length >= 1 ? (
+        <>
+          <GlobalInfo
+            characterData={characterData[0].character}
+            stats={characterData[0].stats}
+          />
+          <RelationCard relations={characterData[0].relations} />
+          <SkillsCard stats={characterData[0].stats} skills={skills!} />
+          <NoteCard imageUrl={characterData[0].character.image} />
+          <BottomEditButton link="/character/edit" />
+        </>
+      ) : (
+        <div className="h-full flex items-center flex-col pt-[25%] gap-1">
+          <div>Pas de personnage trouvé</div>
+          <Link
+            href="/character/create"
+           className="px-3 py-1 rounded-md bg-primary text-content1">
+            Crée votre personnage
+          </Link>
+        </div>
+      )}
     </main>
   );
 };

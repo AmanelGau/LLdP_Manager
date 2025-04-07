@@ -5,7 +5,7 @@ import React, { ReactNode } from "react";
 
 interface Props {
   activeTab: string | null;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   createTabContent: (tab: any) => any;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;

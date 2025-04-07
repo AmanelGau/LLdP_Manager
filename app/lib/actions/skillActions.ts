@@ -1,13 +1,15 @@
 "use server";
 
 import { db } from "app/db";
-import { eq, or } from "drizzle-orm";
+import { and, eq, ExtractTablesWithRelations, inArray, or } from "drizzle-orm";
 import { z } from "zod";
 import {
   characterTable,
   SkillTable,
   CharacterSkillLinkTable,
 } from "../../db/schema";
+import { PgTransaction } from "drizzle-orm/pg-core";
+import { NeonHttpQueryResultHKT } from "drizzle-orm/neon-http";
 
 export interface SkillType {
   id: string;
@@ -23,7 +25,26 @@ export interface CharacterSkillLinkType {
   points: number;
 }
 
-export async function getSkills(characterId: string) {
+const SkillsFormSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  stat: z.string(),
+  basic: z.boolean(),
+});
+
+const CharacterSkillLinkFormSchema = z.object({
+  id: z.string().uuid(),
+  character: z.string().uuid(),
+  skill: z.string().uuid(),
+  points: z.number(),
+  innate: z.boolean().default(false),
+});
+
+const CreateCharacterSkillLink = CharacterSkillLinkFormSchema.omit({
+  id: true,
+});
+
+export async function getSkills(characterId: string | null) {
   return await db
     .select({
       skill: SkillTable,
@@ -32,12 +53,138 @@ export async function getSkills(characterId: string) {
     .from(SkillTable)
     .leftJoin(
       CharacterSkillLinkTable,
-      eq(CharacterSkillLinkTable.skill, SkillTable.id)
+      characterId === null
+        ? eq(CharacterSkillLinkTable.skill, SkillTable.id)
+        : and(
+            eq(CharacterSkillLinkTable.skill, SkillTable.id),
+            eq(CharacterSkillLinkTable.character, characterId)
+          )
     )
     .where(
-      or(
-        eq(CharacterSkillLinkTable.character, characterId),
-        eq(SkillTable.basic, true)
+      characterId === null
+        ? eq(SkillTable.basic, true)
+        : or(
+            eq(CharacterSkillLinkTable.character, characterId),
+            eq(SkillTable.basic, true)
+          )
+    );
+}
+
+export async function modifyCharacterSkillsLinkMultiple(
+  characterSkillsLinkForm: { [key: string]: string },
+  characterId: string
+) {
+  try {
+    const oldSkills = await getSkills(characterId);
+    const listSkillsPoints = Object.entries(characterSkillsLinkForm);
+
+    const skillsToRemove = oldSkills.filter(
+      (oldSkill) =>
+        oldSkill.characterSkillLink &&
+        !listSkillsPoints
+          .map((newSkill) => newSkill[0])
+          .includes(oldSkill.skill.name)
+    );
+    const skillsToUpdate = oldSkills.filter(
+      (oldSkill) =>
+        oldSkill.characterSkillLink &&
+        listSkillsPoints
+          .map((newSkill) => newSkill[0])
+          .includes(oldSkill.skill.name)
+    );
+    const skillsToAdd = oldSkills.filter(
+      (oldSkill) =>
+        !oldSkill.characterSkillLink &&
+        listSkillsPoints
+          .map((newSkill) => newSkill[0])
+          .includes(oldSkill.skill.name)
+    );
+
+    await db.delete(CharacterSkillLinkTable).where(
+      inArray(
+        CharacterSkillLinkTable.id,
+        skillsToRemove.map((oldSkill) => oldSkill.characterSkillLink!.id)
       )
     );
+
+    await skillsToUpdate.forEach(async (oldSkill) => {
+      await db
+        .update(CharacterSkillLinkTable)
+        .set({ points: Number(characterSkillsLinkForm[oldSkill.skill.name]) })
+        .where(eq(CharacterSkillLinkTable.id, oldSkill.characterSkillLink!.id));
+    });
+
+    if (skillsToAdd.length !== 0) {
+      const newSkillList = skillsToAdd.map((oldSkill) => {
+        const validatedFields = CreateCharacterSkillLink.safeParse({
+          character: characterId,
+          skill: oldSkill.skill.id,
+          points: Number(characterSkillsLinkForm[oldSkill.skill.name]),
+        });
+
+        if (!validatedFields.success) {
+          throw validatedFields.error.flatten().fieldErrors;
+        }
+        return {
+          character: validatedFields.data.character,
+          skill: validatedFields.data.skill,
+          points: validatedFields.data.points,
+        };
+      });
+      await db.insert(CharacterSkillLinkTable).values(newSkillList);
+    }
+    return {
+      message: "Succès de la modification de stats",
+    };
+  } catch (error) {
+    return {
+      errors: error,
+      message: "Echec de la modification de stats",
+    };
+  }
+}
+
+export async function insertCharacterSkillsLinkMultiple(
+  characterSkillsLinkForm: { [key: string]: string },
+  characterId: string
+) {
+  try {
+    const oldSkills = await getSkills(characterId);
+    const listSkillsPoints = Object.entries(characterSkillsLinkForm);
+    const skillsToAdd = oldSkills.filter(
+      (oldSkill) =>
+        !oldSkill.characterSkillLink &&
+        listSkillsPoints
+          .map((newSkill) => newSkill[0])
+          .includes(oldSkill.skill.name)
+    );
+
+    if (skillsToAdd.length !== 0) {
+      const newSkillList = skillsToAdd.map((oldSkill) => {
+        const validatedFields = CreateCharacterSkillLink.safeParse({
+          character: characterId,
+          skill: oldSkill.skill.id,
+          points: Number(characterSkillsLinkForm[oldSkill.skill.name]),
+        });
+
+        if (!validatedFields.success) {
+          throw validatedFields.error.flatten().fieldErrors;
+        }
+        return {
+          character: validatedFields.data.character,
+          skill: validatedFields.data.skill,
+          points: validatedFields.data.points,
+        };
+      });
+      await db.insert(CharacterSkillLinkTable).values(newSkillList);
+    }
+    return {
+      message: "Succès de la modification de stats",
+    };
+  } catch (error) {
+    return {
+      errors: error,
+      message: "Echec de la modification de stats",
+    };
+  }
 }
