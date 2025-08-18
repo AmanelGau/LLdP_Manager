@@ -1,6 +1,6 @@
-import { SkillTable } from "./schema";
+import { skillTable, statEnum } from "./schema";
 
-const intelligenceSkills: (typeof SkillTable.$inferInsert)[] = [
+const intelligenceSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Connaissances des Créatures",
     stat: "intelligence",
@@ -107,7 +107,7 @@ const intelligenceSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const constitutionSkills: (typeof SkillTable.$inferInsert)[] = [
+const constitutionSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Résistance magique / physique",
     stat: "constitution",
@@ -159,7 +159,7 @@ const constitutionSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const forceSkills: (typeof SkillTable.$inferInsert)[] = [
+const forceSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Athlétisme",
     stat: "force",
@@ -211,7 +211,7 @@ const forceSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const powerSkills: (typeof SkillTable.$inferInsert)[] = [
+const powerSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Magie Arcanique",
     stat: "power",
@@ -233,7 +233,7 @@ const powerSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const willSkills: (typeof SkillTable.$inferInsert)[] = [
+const willSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Écouter",
     stat: "will",
@@ -290,7 +290,7 @@ const willSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const socialSkills: (typeof SkillTable.$inferInsert)[] = [
+const socialSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Baratin",
     stat: "social",
@@ -327,7 +327,7 @@ const socialSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const knowHowSkills: (typeof SkillTable.$inferInsert)[] = [
+const knowHowSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Bricolage",
     stat: "knowHow",
@@ -364,7 +364,7 @@ const knowHowSkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const agilitySkills: (typeof SkillTable.$inferInsert)[] = [
+const agilitySkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Acrobatie",
     stat: "agility",
@@ -436,7 +436,7 @@ const agilitySkills: (typeof SkillTable.$inferInsert)[] = [
     basic: true,
   },
 ];
-const sociableSkills: (typeof SkillTable.$inferInsert)[] = [
+const sociableSkills: (typeof skillTable.$inferInsert)[] = [
   {
     name: "Relation",
     stat: "sociable",
@@ -474,4 +474,67 @@ export const skills = [
   ...knowHowSkills,
   ...agilitySkills,
   ...sociableSkills,
+];
+
+export const races = [
+  {
+    name: "Thalyphim",
+    categorie: "Equinoxs",
+    image: "",
+    physique:
+      "Prototype des anges, les Thalyphims possèdent une apparence se rapprochant davantage de la harpie que de l'ange contemporain, ces êtres sont très raffinés et élancés apparenté au Edragoness. Ils sont affublés d'un masque qui n'est jamais, au grand jamais retiré, seul les êtres composant cette espèce et leurs créateur en connaissent la raison. Les Thalyphims sont androgynes et pour certains ils présentent les deux sexes.",
+    character:
+      "On peut définir les Thalyphims comme d'humble créature possédant un grand respect pour autrui, mais cette considération devant être mutuelle si on lui en manque vous vous attirerez les foudres du Thalyphim en question. Traits communs à leurs successeur les Thalyphims savent exprimer une grande douceur et une empathie certaine pour les autres. Bien que leur visage soit caché ils savent démontrer tout un spectre émotionnel large et varié par les plumes dont ils sont parés, un changement de couleurs, de teinte, des plume vibrantes à différent rythme.",
+    bonus: [
+      {
+        type: "default",
+        stats: [
+          [statEnum.enumValues[2], statEnum.enumValues[5]],
+          [statEnum.enumValues[2], statEnum.enumValues[7]],
+        ],
+      },
+    ],
+  },
+  {
+    name: "Ange",
+    categorie: "Eternels",
+    image: "",
+    physique:
+      "Les Anges ont une apparence élancée. Ils ont la peau pâle, les cheveux et les yeux clairs. Ils ont de grandes ailes de couleur blanche en passant par le bleu ou jaune pastel/clair. Ils possèdent une auréole au-dessus de la tête qui représente leur vices (1 à 7 pics). L'auréole est invisible aux yeux des autres qui ne sont pas des anges (sauf pour ceux qui ont frôler la mort de très très près). Leurs tailles varient entre 1m65 et 1m90.",
+    character:
+      "Les Anges, avec 3 pics ou plus sont considérés comme une hérésie pour les autres anges. Ils ont un caractère généralement hautain. Ils jugent les autres races très facilement et déteste avoir tort ou se sentir inutile. Ils sont doués d'une facilité à cerner les autres races. Ils sont pourtant d'une grande douceur et d'un calme apaisant.",
+    bonus: [
+      {
+        type: "default",
+        stats: [[statEnum.enumValues[2], statEnum.enumValues[5]]],
+      },
+    ],
+  },
+  {
+    name: "Demon",
+    categorie: "Eternels",
+    image: "",
+    physique:
+      "Les Démons font partie des races les plus hétéroclites des différents royaume, ils ne possèdent que très peu de caractéristique propres et certains représentant de cette espèce peuvent être assimilé à d'autre race. On note néanmoins une récurrence de la présence de queues, cornes, ailes, des canines proéminente, ainsi que des yeux de félins ou de serpents, bien sûr les Démons de possèdent pas tout à la fois mais généralement ils en cumulent deux ou trois, ce qui permet pour les plus fins observateurs de les différencier des autre races.",
+    character:
+      "Issu d'une société élitiste, les Démons possèdent un caractère au diapason de cette dernières, ils sont arrogant, manipulateur et baigne dans un orgueil cultivé par la pureté du sang. En complément de leurs facilité à évoluer en communauté ils suivent un code d'honneur appelé «La Daemonys»>, bien que les légendes les présentent comme des créatures abjectes et sans la moindre once de sentiment positif, ce grand sens de l'honneur et du devoir les placent comme allié fidèle lors des moment les plus sombre de votre aventure, si ces derniers sont de votre coté.",
+    bonus: [
+      {
+        type: "Sang-Pur",
+        stats: [
+          [statEnum.enumValues[8], statEnum.enumValues[3]],
+          [statEnum.enumValues[1], statEnum.enumValues[3]],
+        ],
+      },
+      ,
+      {
+        type: "Dynastie",
+        stats: [[statEnum.enumValues[0], statEnum.enumValues[2]]],
+      },
+      {
+        type: "Demi-Sang",
+        stats: [[statEnum.enumValues[1], statEnum.enumValues[2]]],
+      },
+    ],
+  },
 ];

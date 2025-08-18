@@ -1,13 +1,8 @@
 import "dotenv/config";
-import { SkillTable, usersTable } from "./schema";
+import { raceBonusTable, raceTable, skillTable, usersTable } from "./schema";
 import { db } from "./index";
 import bcrypt from "bcrypt";
-import { skills } from "./basicData";
-
-async function main() {
-  await populateUsers();
-  await populateSkills();
-}
+import { races, skills } from "./basicData";
 
 async function populateUsers() {
   const user: typeof usersTable.$inferInsert = {
@@ -21,8 +16,62 @@ async function populateUsers() {
 }
 
 async function populateSkills() {
-  await db.insert(SkillTable).values(skills).onConflictDoNothing();
+  const actualSkills = (
+    await db
+      .select({
+        name: skillTable.name,
+      })
+      .from(skillTable)
+  ).map((skill) => skill.name);
+  const toAddSkills = skills.filter(
+    (skill) => !actualSkills.includes(skill.name)
+  );
+  await db.insert(skillTable).values(toAddSkills).onConflictDoNothing();
   console.log("Skills populate");
 }
 
-main();
+async function populateRaces() {
+  console.log("Populating races");
+  const actualRaces = (
+    await db
+      .select({
+        name: raceTable.name,
+      })
+      .from(raceTable)
+  ).map((race) => race.name);
+  const toAddRaces = races.filter((race) => !actualRaces.includes(race.name));
+  toAddRaces.forEach(async (race) => {
+    const raceId = await db
+      .insert(raceTable)
+      .values({
+        name: race.name,
+        categorie: race.categorie,
+        physique: race.physique,
+        character: race.character,
+      })
+      .onConflictDoNothing()
+      .returning({ raceId: raceTable.id });
+    await race.bonus.forEach(async (bonus) => {
+      await db.insert(raceBonusTable).values(
+        bonus!.stats.map((stats) => ({
+          race: raceId[0].raceId,
+          type: bonus!.type,
+          stat1: stats[0],
+          stat2: stats[1],
+        }))
+      );
+    });
+  });
+  console.log("Races populate");
+}
+
+export async function GET() {
+  try {
+    await populateUsers();
+    await populateSkills();
+    await populateRaces();
+    return Response.json({ message: "Database seeded successfully" });
+  } catch (error) {
+    return Response.json({ error }, { status: 500 });
+  }
+}

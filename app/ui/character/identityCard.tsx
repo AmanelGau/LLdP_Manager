@@ -3,20 +3,17 @@
 import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import {
-  CharacterType,
-  setCurrentCharacterStat,
-  StatsType,
-} from "@/app/lib/actions/characterActions";
+import { setCurrentCharacterStat } from "@/app/lib/actions/characterActions";
 import NumberInuptOnclick from "../numberInuptOnclick";
 import { characterTable, statsTable } from "@/app/db/schema";
 
 interface Props {
   characterData: typeof characterTable.$inferSelect;
+  race: string;
   stats: typeof statsTable.$inferSelect;
 }
 
-const IdentityCard = ({ characterData, stats }: Props) => {
+const IdentityCard = ({ characterData, race, stats }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [composure, setComposure] = useState<number>(characterData.composure);
   const [life, setLife] = useState<number>(characterData.life);
@@ -100,7 +97,7 @@ const IdentityCard = ({ characterData, stats }: Props) => {
         <>
           <div>Age : {characterData.age}</div>
           <div>Sexe : {characterData.sex}</div>
-          <div>Race: {characterData.race}</div>
+          <div>Race : {race}</div>
           <div>Groupe de métier : {characterData.jobGroup}</div>
           <div>Qualité : {characterData.quality}</div>
           <div>Défaut : {characterData.fault}</div>

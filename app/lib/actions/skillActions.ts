@@ -3,13 +3,7 @@
 import { db } from "app/db";
 import { and, eq, ExtractTablesWithRelations, inArray, or } from "drizzle-orm";
 import { z } from "zod";
-import {
-  characterTable,
-  SkillTable,
-  CharacterSkillLinkTable,
-} from "../../db/schema";
-import { PgTransaction } from "drizzle-orm/pg-core";
-import { NeonHttpQueryResultHKT } from "drizzle-orm/neon-http";
+import { skillTable, characterSkillLinkTable } from "../../db/schema";
 
 export interface SkillType {
   id: string;
@@ -47,25 +41,25 @@ const CreateCharacterSkillLink = CharacterSkillLinkFormSchema.omit({
 export async function getSkills(characterId: string | null) {
   return await db
     .select({
-      skill: SkillTable,
-      characterSkillLink: CharacterSkillLinkTable,
+      skill: skillTable,
+      characterSkillLink: characterSkillLinkTable,
     })
-    .from(SkillTable)
+    .from(skillTable)
     .leftJoin(
-      CharacterSkillLinkTable,
+      characterSkillLinkTable,
       characterId === null
-        ? eq(CharacterSkillLinkTable.skill, SkillTable.id)
+        ? eq(characterSkillLinkTable.skill, skillTable.id)
         : and(
-            eq(CharacterSkillLinkTable.skill, SkillTable.id),
-            eq(CharacterSkillLinkTable.character, characterId)
+            eq(characterSkillLinkTable.skill, skillTable.id),
+            eq(characterSkillLinkTable.character, characterId)
           )
     )
     .where(
       characterId === null
-        ? eq(SkillTable.basic, true)
+        ? eq(skillTable.basic, true)
         : or(
-            eq(CharacterSkillLinkTable.character, characterId),
-            eq(SkillTable.basic, true)
+            eq(characterSkillLinkTable.character, characterId),
+            eq(skillTable.basic, true)
           )
     );
 }
@@ -100,18 +94,18 @@ export async function modifyCharacterSkillsLinkMultiple(
           .includes(oldSkill.skill.name)
     );
 
-    await db.delete(CharacterSkillLinkTable).where(
+    await db.delete(characterSkillLinkTable).where(
       inArray(
-        CharacterSkillLinkTable.id,
+        characterSkillLinkTable.id,
         skillsToRemove.map((oldSkill) => oldSkill.characterSkillLink!.id)
       )
     );
 
     await skillsToUpdate.forEach(async (oldSkill) => {
       await db
-        .update(CharacterSkillLinkTable)
+        .update(characterSkillLinkTable)
         .set({ points: Number(characterSkillsLinkForm[oldSkill.skill.name]) })
-        .where(eq(CharacterSkillLinkTable.id, oldSkill.characterSkillLink!.id));
+        .where(eq(characterSkillLinkTable.id, oldSkill.characterSkillLink!.id));
     });
 
     if (skillsToAdd.length !== 0) {
@@ -131,7 +125,7 @@ export async function modifyCharacterSkillsLinkMultiple(
           points: validatedFields.data.points,
         };
       });
-      await db.insert(CharacterSkillLinkTable).values(newSkillList);
+      await db.insert(characterSkillLinkTable).values(newSkillList);
     }
     return {
       message: "Succès de la modification de stats",
@@ -176,7 +170,7 @@ export async function insertCharacterSkillsLinkMultiple(
           points: validatedFields.data.points,
         };
       });
-      await db.insert(CharacterSkillLinkTable).values(newSkillList);
+      await db.insert(characterSkillLinkTable).values(newSkillList);
     }
     return {
       message: "Succès de la modification de stats",

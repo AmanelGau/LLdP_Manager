@@ -1,12 +1,55 @@
-import { characterTable } from "@/app/db/schema";
+import { characterTable, raceBonusTable } from "@/app/db/schema";
 import Card from "../../card";
+import RaceModal from "./raceModal";
 
 interface Props {
   character: typeof characterTable.$inferInsert;
-  setForm: (action: { type: string; value: string }) => void;
+  charRace: {
+    primaryRace?: typeof raceBonusTable.$inferSelect;
+    raceName: string;
+    race2?: { id: string; name: string };
+    race3?: { id: string; name: string };
+  };
+  primeBlood: {
+    id: string;
+    race1: string;
+    race2: string;
+  }[];
+  races: {
+    race: {
+      name: string;
+      id: string;
+      character: string | null;
+      image: string | null;
+      categorie: string;
+      physique: string | null;
+      active: string | null;
+      passive: string | null;
+      bloodType: string;
+      playable: boolean;
+    };
+    bonus: (typeof raceBonusTable.$inferSelect)[];
+  }[];
+  setForm: (action: {
+    type: string;
+    value:
+      | string
+      | {
+          primaryRace?: typeof raceBonusTable.$inferSelect;
+          raceName: string;
+          race2?: { id: string; name: string };
+          race3?: { id: string; name: string };
+        };
+  }) => void;
 }
 
-const IdentityCardForm = ({ character, setForm }: Props) => {
+const IdentityCardForm = ({
+  character,
+  charRace,
+  primeBlood,
+  races,
+  setForm,
+}: Props) => {
   const InputContainer = ({
     name,
     children,
@@ -73,14 +116,20 @@ const IdentityCardForm = ({ character, setForm }: Props) => {
         />
       </InputContainer>
       <InputContainer name="Race *">
-        <input
-          defaultValue={character?.race}
-          className="peer block w-32 rounded-md border p-2 text-sm outline-2 border-content2 bg-background text-foreground"
-          id="race"
-          name="race"
-          onBlur={(e) => setForm({ type: "race", value: e.target.value })}
-          placeholder=""
-          required
+        {/* <div className="w-32 overflow-visible">
+          <div className="w-max">
+            {charRace?.raceName +
+              (charRace.race2
+                ? ` / ${charRace.race2?.name}` +
+                  (charRace.race3 ? ` / ${charRace.race3?.name}` : "")
+                : "")}
+          </div>
+        </div> */}
+        <RaceModal
+          charRace={charRace}
+          primeBlood={primeBlood}
+          races={races}
+          setForm={setForm}
         />
       </InputContainer>
       <InputContainer name="Magie">

@@ -7,34 +7,68 @@ import RelationCardForm from "./character/relationCardForm";
 import StatsCardForm from "./character/statsCardForm";
 import {
   characterTable,
-  CharacterSkillLinkTable,
-  SkillTable,
+  characterSkillLinkTable,
+  skillTable,
   statsTable,
   relationsTable,
+  raceBonusTable,
 } from "@/app/db/schema";
 import SkillsCardForm from "./character/skillsCardForm";
 import { modifyCharacter } from "@/app/lib/actions/characterActions";
 import { redirect } from "next/navigation";
 
 interface Props {
+  charRace: {
+    primaryRace: typeof raceBonusTable.$inferSelect;
+    raceName: string;
+    race2?: { id: string; name: string };
+    race3?: { id: string; name: string };
+  };
   defaultCharacter: typeof characterTable.$inferSelect;
   defaultRelations: typeof relationsTable.$inferSelect;
   defaultSkills: {
-    skill: typeof SkillTable.$inferSelect;
-    characterSkillLink: typeof CharacterSkillLinkTable.$inferSelect | null;
+    skill: typeof skillTable.$inferSelect;
+    characterSkillLink: typeof characterSkillLinkTable.$inferSelect | null;
   }[];
   defaultStats: typeof statsTable.$inferSelect;
+  primeBlood: {
+    id: string;
+    race1: string;
+    race2: string;
+  }[];
+  races: {
+    race: {
+      name: string;
+      id: string;
+      character: string | null;
+      image: string | null;
+      categorie: string;
+      physique: string | null;
+      active: string | null;
+      passive: string | null;
+      bloodType: string;
+      playable: boolean;
+    };
+    bonus: (typeof raceBonusTable.$inferSelect)[];
+  }[];
 }
 
 export default function CharacterModificationForm({
+  charRace,
   defaultCharacter,
   defaultRelations,
   defaultSkills,
   defaultStats,
+  primeBlood,
+  races,
 }: Props) {
   const formReducer = (
     form: any,
-    action: { type: string; key?: string; value: string | number }
+    action: {
+      type: string;
+      key?: string;
+      value: string | number | Partial<typeof charRace>;
+    }
   ) => {
     switch (action.type) {
       case "lastName":
@@ -42,7 +76,6 @@ export default function CharacterModificationForm({
       case "composure":
       case "age":
       case "sex":
-      case "race":
       case "jobGroup":
       case "job":
       case "quality":
@@ -107,6 +140,11 @@ export default function CharacterModificationForm({
             },
           };
         }
+      case "race":
+        return {
+          ...form,
+          race: action.value,
+        };
     }
   };
 
@@ -156,6 +194,7 @@ export default function CharacterModificationForm({
       agility: defaultStats.agility,
       sociable: defaultStats.sociable,
     },
+    race: charRace,
   });
 
   const onValidate = async () => {
@@ -169,7 +208,13 @@ export default function CharacterModificationForm({
 
   return (
     <div className="space-y-3">
-      <IdentityCardForm character={form.character} setForm={dispatch} />
+      <IdentityCardForm
+        character={form.character}
+        charRace={form.race}
+        primeBlood={primeBlood}
+        setForm={dispatch}
+        races={races}
+      />
       <RelationCardForm relations={form.relations} setForm={dispatch} />
       <StatsCardForm setForm={dispatch} stats={form.stats} />
       <SkillsCardForm

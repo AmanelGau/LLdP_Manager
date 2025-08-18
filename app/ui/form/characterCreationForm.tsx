@@ -4,7 +4,11 @@ import IdentityCardForm from "./character/identityCardForm";
 import BottomValidationButtons from "../bottomValidationButtons";
 import RelationCardForm from "./character/relationCardForm";
 import StatsCardForm from "./character/statsCardForm";
-import { CharacterSkillLinkTable, SkillTable } from "@/app/db/schema";
+import {
+  characterSkillLinkTable,
+  raceBonusTable,
+  skillTable,
+} from "@/app/db/schema";
 import SkillsCardForm from "./character/skillsCardForm";
 import { insertCharacter } from "@/app/lib/actions/characterActions";
 import { redirect } from "next/navigation";
@@ -13,19 +17,53 @@ import { Xanh_Mono } from "next/font/google";
 
 interface Props {
   defaultSkills: {
-    skill: typeof SkillTable.$inferSelect;
-    characterSkillLink: typeof CharacterSkillLinkTable.$inferSelect | null;
+    skill: typeof skillTable.$inferSelect;
+    characterSkillLink: typeof characterSkillLinkTable.$inferSelect | null;
+  }[];
+  primeBlood: {
+    id: string;
+    race1: string;
+    race2: string;
+  }[];
+  races: {
+    race: {
+      name: string;
+      id: string;
+      character: string | null;
+      image: string | null;
+      categorie: string;
+      physique: string | null;
+      active: string | null;
+      passive: string | null;
+      bloodType: string;
+      playable: boolean;
+    };
+    bonus: (typeof raceBonusTable.$inferSelect)[];
   }[];
   userEmail: string;
 }
 
 export default function CharacterCreationForm({
   defaultSkills,
+  primeBlood,
+  races,
   userEmail,
 }: Props) {
   const formReducer = (
     form: any,
-    action: { type: string; key?: string; value: string | number }
+    action: {
+      type: string;
+      key?: string;
+      value:
+        | string
+        | number
+        | {
+            primaryRace?: typeof raceBonusTable.$inferSelect;
+            raceName: string;
+            race2?: { id: string; name: string };
+            race3?: { id: string; name: string };
+          };
+    }
   ) => {
     switch (action.type) {
       case "lastName":
@@ -33,7 +71,6 @@ export default function CharacterCreationForm({
       case "composure":
       case "age":
       case "sex":
-      case "race":
       case "jobGroup":
       case "job":
       case "quality":
@@ -98,6 +135,11 @@ export default function CharacterCreationForm({
             },
           };
         }
+      case "race":
+        return {
+          ...form,
+          race: action.value,
+        };
     }
   };
 
@@ -137,9 +179,14 @@ export default function CharacterCreationForm({
       agility: "",
       sociable: "",
     },
+    race: {
+      primaryRace: null,
+      raceName: "",
+    },
   });
 
   const onValidate = async () => {
+    console.log(form);
     const result = await insertCharacter(form, userEmail);
     console.log(result);
     if (result.errors) {
@@ -149,11 +196,15 @@ export default function CharacterCreationForm({
     }
   };
 
-  console.log(form);
-
   return (
     <div className="space-y-3">
-      <IdentityCardForm character={form.character} setForm={dispatch} />
+      <IdentityCardForm
+        character={form.character}
+        charRace={form.race}
+        primeBlood={primeBlood}
+        setForm={dispatch}
+        races={races}
+      />
       <RelationCardForm relations={form.relations} setForm={dispatch} />
       <StatsCardForm setForm={dispatch} stats={form.stats} />
       <SkillsCardForm

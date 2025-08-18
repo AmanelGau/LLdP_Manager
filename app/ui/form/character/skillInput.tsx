@@ -1,13 +1,13 @@
 "use client";
 
-import { CharacterSkillLinkTable, SkillTable } from "@/app/db/schema";
+import { characterSkillLinkTable, skillTable } from "@/app/db/schema";
 import { ChangeEvent, useState } from "react";
 
 interface Props {
   setForm: (action: { key?: string; type: string; value: string }) => void;
   skill: {
-    characterSkillLink: typeof CharacterSkillLinkTable.$inferInsert | null;
-    skill: typeof SkillTable.$inferSelect;
+    characterSkillLink: typeof characterSkillLinkTable.$inferInsert | null;
+    skill: typeof skillTable.$inferSelect;
   };
   value: string;
 }

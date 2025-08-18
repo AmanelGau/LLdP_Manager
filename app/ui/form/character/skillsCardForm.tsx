@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  CharacterSkillLinkTable,
-  SkillTable,
+  characterSkillLinkTable,
+  skillTable,
   statsTable,
 } from "@/app/db/schema";
 import TabCard from "../../tabCard";
@@ -16,8 +16,8 @@ interface Props {
     [key: string]: string;
   };
   skillsList: {
-    characterSkillLink: typeof CharacterSkillLinkTable.$inferSelect | null;
-    skill: typeof SkillTable.$inferSelect;
+    characterSkillLink: typeof characterSkillLinkTable.$inferSelect | null;
+    skill: typeof skillTable.$inferSelect;
   }[];
   stats: {
     intelligence: string;
@@ -32,21 +32,22 @@ interface Props {
   };
 }
 
+// à changer pour de l'internationalization
+export const tabs = [
+  { name: "intelligence", label: "Intelligence" },
+  { name: "will", label: "Volonté" },
+  { name: "power", label: "Pouvoir" },
+  { name: "force", label: "Force" },
+  { name: "constitution", label: "Constitution" },
+  { name: "agility", label: "Agilité" },
+  { name: "knowHow", label: "Savoir-faire" },
+  { name: "social", label: "Social" },
+  { name: "sociable", label: "Sociable" },
+];
+
 const SkillsCardForm = ({ setForm, skills, skillsList, stats }: Props) => {
   const [activeTab, setActiveTab] = useState<string>("intelligence");
   const [skillsData, setSkillsData] = useState<any[]>([]);
-
-  const tabs = [
-    { name: "intelligence", label: "Intelligence" },
-    { name: "will", label: "Volonté" },
-    { name: "power", label: "Pouvoir" },
-    { name: "force", label: "Force" },
-    { name: "constitution", label: "Constitution" },
-    { name: "agility", label: "Agilité" },
-    { name: "knowHow", label: "Savoir-faire" },
-    { name: "social", label: "Social" },
-    { name: "sociable", label: "Sociable" },
-  ];
 
   const skillHeaders = {
     name: "Nom",
@@ -88,7 +89,6 @@ const SkillsCardForm = ({ setForm, skills, skillsList, stats }: Props) => {
   };
 
   useEffect(() => {
-    console.log(skills);
     setSkillsData(
       skillsList.map((skill) => {
         let baseStat = 0;

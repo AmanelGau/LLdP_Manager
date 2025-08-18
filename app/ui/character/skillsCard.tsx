@@ -3,19 +3,17 @@
 import { useState } from "react";
 import TabCard from "../tabCard";
 import Table from "../table";
-import { StatsType } from "@/app/lib/actions/characterActions";
-import { SkillActions } from "@/app/lib/actions";
 import {
-  CharacterSkillLinkTable,
-  SkillTable,
+  characterSkillLinkTable,
+  skillTable,
   statsTable,
 } from "@/app/db/schema";
 
 interface Props {
   stats: typeof statsTable.$inferSelect;
   skills: {
-    skill: typeof SkillTable.$inferSelect;
-    characterSkillLink: typeof CharacterSkillLinkTable.$inferSelect | null;
+    skill: typeof skillTable.$inferSelect;
+    characterSkillLink: typeof characterSkillLinkTable.$inferSelect | null;
   }[];
 }
 

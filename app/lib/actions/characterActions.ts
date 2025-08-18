@@ -4,13 +4,17 @@ import { db } from "app/db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import {
+  characterRaceLinkTable,
   characterTable,
+  raceBonusTable,
+  raceTable,
   relationsTable,
   statsTable,
   usersTable,
 } from "../../db/schema";
 import { convertToFormData } from "../utils";
-import { RelationsActions, SkillActions, StatsActions } from ".";
+import { RaceActions, RelationsActions, SkillActions, StatsActions } from ".";
+import { alias } from "drizzle-orm/pg-core";
 
 export interface CharacterType {
   id: string;
@@ -65,16 +69,34 @@ const ModifyCharacter = CharacterFormSchema.omit({
 });
 
 export async function getCharacter(userEmail: string) {
+  const race2 = alias(raceTable, "race2");
+  const race3 = alias(raceTable, "race3");
+
   return db
     .select({
       character: characterTable,
       relations: relationsTable,
       stats: statsTable,
+      primaryRace: raceBonusTable,
+      raceName: raceTable.name,
+      race2: race2,
+      race3: race3,
     })
     .from(characterTable)
     .innerJoin(usersTable, eq(usersTable.id, characterTable.user))
     .innerJoin(relationsTable, eq(characterTable.relations, relationsTable.id))
     .innerJoin(statsTable, eq(characterTable.stats, statsTable.id))
+    .innerJoin(
+      characterRaceLinkTable,
+      eq(characterTable.race, characterRaceLinkTable.id)
+    )
+    .innerJoin(
+      raceBonusTable,
+      eq(characterRaceLinkTable.primaryRace, raceBonusTable.id)
+    )
+    .innerJoin(raceTable, eq(raceBonusTable.race, raceTable.id))
+    .leftJoin(race2, eq(characterRaceLinkTable.race2, race2.id))
+    .leftJoin(race3, eq(characterRaceLinkTable.race3, race3.id))
     .where(eq(usersTable.email, userEmail));
 }
 
@@ -119,6 +141,12 @@ export async function modifyCharacter(characterModificationForm: {
     agility: string;
     sociable: string;
   };
+  race: {
+    primaryRace: typeof raceBonusTable.$inferSelect;
+    raceName: string;
+    race2?: { id: string; name: string };
+    race3?: { id: string; name: string };
+  };
 }) {
   try {
     console.log("début de la modification");
@@ -150,6 +178,17 @@ export async function modifyCharacter(characterModificationForm: {
     );
     if (skillsResult.errors) {
       return skillsResult;
+    }
+
+    const raceForm: FormData = convertToFormData({
+      id: characterModificationForm.character.race,
+      primaryRace: characterModificationForm.race.primaryRace.id,
+      race2: characterModificationForm.race.race2?.id,
+      race3: characterModificationForm.race.race3?.id,
+    });
+    const raceResult = await RaceActions.modifyCharacterRaceLink(raceForm);
+    if (raceResult.errors) {
+      return raceResult;
     }
 
     const validatedFields = ModifyCharacter.safeParse({
@@ -260,6 +299,12 @@ export async function insertCharacter(
       agility: string;
       sociable: string;
     };
+    race: {
+      primaryRace: typeof raceBonusTable.$inferSelect;
+      raceName: string;
+      race2?: { id: string; name: string };
+      race3?: { id: string; name: string };
+    };
   },
   userEmail: string
 ) {
@@ -274,6 +319,11 @@ export async function insertCharacter(
     const statsForm: FormData = convertToFormData(
       characterModificationForm.stats
     );
+    const raceForm: FormData = convertToFormData({
+      primaryRace: characterModificationForm.race.primaryRace.id,
+      race2: characterModificationForm.race.race2?.id,
+      race3: characterModificationForm.race.race3?.id,
+    });
 
     const statsResult = await StatsActions.insertStats(statsForm);
     if (statsResult.errors) {
@@ -287,6 +337,12 @@ export async function insertCharacter(
     if (relationsResult.errors) {
       console.log(relationsResult.errors);
       throw relationsResult.message;
+    }
+
+    const raceResult = await RaceActions.insertCharacterRaceLink(raceForm);
+    if (raceResult.errors) {
+      console.log(raceResult.errors);
+      throw raceResult.message;
     }
 
     const { userId } = (
@@ -304,7 +360,7 @@ export async function insertCharacter(
       forename: characterForm.get("forename"),
       age: Number(characterForm.get("age")),
       sex: characterForm.get("sex"),
-      race: characterForm.get("race"),
+      race: raceResult.charaRaceId,
       jobGroup: characterForm.get("jobGroup"),
       job: characterForm.get("job"),
       quality: characterForm.get("quality"),
