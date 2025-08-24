@@ -1,42 +1,45 @@
-import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
-import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import NextAuth, { Session } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
-import { db } from "app/db";
-import bcrypt from "bcrypt";
-import { usersTable } from "app/db/schema";
-import { eq } from "drizzle-orm";
-// import EmailProvider from "next-auth/providers/nodemailer";
+import { getUser } from "./app/lib/actions/authActions";
+import { authConfig } from "./auth.config";
+import { db } from "./app/db";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import {
+  accounts,
+  sessions,
+  usersTable,
+  verificationTokens,
+} from "./app/db/schema";
 
-async function getUser(
-  email: string
-): Promise<typeof usersTable.$inferInsert | undefined> {
-  try {
-    const user = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.email, email));
-    return user[0];
-  } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
-  }
-}
-
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
+  session: {
+    strategy: "jwt",
+  },
   providers: [
-    Credentials({
-      async authorize(credentials) {
+    CredentialsProvider({
+      credentials: {
+        email: {},
+        password: {},
+      },
+      authorize: async (credentials) => {
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
+          console.log("authorize parsing success");
           const { email, password } = parsedCredentials.data;
           const user = await getUser(email);
+          console.log("User", user);
+
           if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch =
+            user.password && (await bcrypt.compare(password, user.password));
+          console.log("Pwd matching", passwordsMatch);
 
           if (passwordsMatch) return user;
         }
@@ -45,10 +48,35 @@ export const { auth, signIn, signOut } = NextAuth({
         return null;
       },
     }),
-    // EmailProvider({
-    //   server: process.env.EMAIL_SERVER,
-    //   from: process.env.EMAIL_FROM,
-    //   // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        token.id = user.id;
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id as string,
+          role: token.role as string,
+        },
+      };
+    },
+  },
+  adapter: DrizzleAdapter(db, {
+    usersTable: usersTable,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }),
+  secret: process.env.AUTH_SECRET,
 });

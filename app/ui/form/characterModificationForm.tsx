@@ -83,6 +83,7 @@ export default function CharacterModificationForm({
       case "religion":
       case "nationality":
       case "magic":
+      case "level":
         return {
           ...form,
           character: {
@@ -166,6 +167,7 @@ export default function CharacterModificationForm({
       life: defaultCharacter.life,
       mana: defaultCharacter.mana,
       fitness: defaultCharacter.fitness,
+      level: defaultCharacter.level,
     },
     relations: {
       id: defaultRelations.id,
@@ -216,7 +218,12 @@ export default function CharacterModificationForm({
         races={races}
       />
       <RelationCardForm relations={form.relations} setForm={dispatch} />
-      <StatsCardForm setForm={dispatch} stats={form.stats} />
+      <StatsCardForm
+        level={Number(form.character.level) || 0}
+        race={form.race}
+        setForm={dispatch}
+        stats={form.stats}
+      />
       <SkillsCardForm
         setForm={dispatch}
         skills={form.skills}

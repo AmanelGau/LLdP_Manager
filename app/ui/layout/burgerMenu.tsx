@@ -15,7 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Key } from "react";
 import { useRouter } from "next/navigation";
-import { signout } from "@/app/lib/actions/authActions";
+import { logout } from "@/app/lib/actions/authActions";
 
 const burgerMenu = () => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const burgerMenu = () => {
   const handleAction = (key: Key) => {
     switch (key) {
       case "logout":
-        signout();
+        logout();
         break;
       case "settings":
         router.push("/settings");
@@ -34,7 +34,7 @@ const burgerMenu = () => {
     }
   };
 
-  const iconClasses = "max-h-[20px] text-xl pointer-events-none flex-shrink-0";
+  const iconClasses = "max-h-[20px] text-xl pointer-events-none shrink-0";
 
   return (
     <Dropdown>

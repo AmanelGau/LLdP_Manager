@@ -1,7 +1,6 @@
 "use client";
 
 import { characterSkillLinkTable, skillTable } from "@/app/db/schema";
-import { ChangeEvent, useState } from "react";
 
 interface Props {
   setForm: (action: { key?: string; type: string; value: string }) => void;

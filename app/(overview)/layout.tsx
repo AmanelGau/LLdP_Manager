@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="bg-content1 absolute h-auto bottom-0 top-16 z-[11]">
           <SideNav />
         </div>
-        <div className="flex-grow p-2 md:overflow-y-auto md:p-4 md:ml-[72px]">
+        <div className="grow p-2 md:overflow-y-auto md:p-4 md:ml-[72px]">
           {children}
         </div>
       </div>

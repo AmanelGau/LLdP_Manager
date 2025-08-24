@@ -5,7 +5,7 @@ export const authConfig = {
     signIn: "/login",
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ request: { nextUrl }, auth }) {
       const isLoggedIn = !!auth?.user;
       const isOnLogin =
         nextUrl.pathname.startsWith("/login") ||

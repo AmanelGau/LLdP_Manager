@@ -1,20 +1,11 @@
 "use server";
 
-import { signIn, signOut } from "auth";
-import { AuthError } from "next-auth";
-import { db } from "app/db";
+import { db } from "@/app/db";
+import { usersTable } from "@/app/db/schema";
+import bcrypt from "bcryptjs";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-import { usersTable } from "../../db/schema";
-import bcrypt from "bcrypt";
-
-export type State = {
-  errors?: {
-    email?: string[];
-    name?: string[];
-    password?: string[];
-  };
-  message?: string | null;
-};
+import { signIn, signOut } from "@/auth";
 
 const UserFormSchema = z.object({
   id: z.string().uuid(),
@@ -35,64 +26,61 @@ const UserFormSchema = z.object({
 
 const CreateUser = UserFormSchema.omit({ id: true });
 
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData
-) {
+export const loginGoogle = async () => {
+  await signIn("google", { redirectTo: "/" });
+};
+
+export const loginCredential = async (email: string, password: string) => {
+  await signIn("credentials", {
+    redirectTo: "/",
+    email,
+    password,
+  });
+};
+
+export async function getUser(
+  email: string,
+  connexionMethod: string = "Credentials"
+): Promise<typeof usersTable.$inferInsert | undefined> {
   try {
-    await signIn("credentials", formData);
+    const user = await db
+      .select()
+      .from(usersTable)
+      .where(
+        and(
+          eq(usersTable.email, email),
+          eq(usersTable.connexionMethod, connexionMethod)
+        )
+      );
+    return user.length > 0 ? user[0] : undefined;
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials.";
-        default:
-          return "Something went wrong.";
-      }
-    }
-    throw error;
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
   }
 }
 
-export async function signup(prevState: State | undefined, formData: FormData) {
-  try {
-    const validatedFields = CreateUser.safeParse({
-      email: formData.get("email"),
-      name: formData.get("name"),
-      password: formData.get("password"),
-    });
+export async function signup(email: string, name: string, password: string) {
+  const existingUser = await getUser(email);
 
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-        message: "Échec de la création de compte : Champs invalides.",
-      };
-    }
-
-    const user: typeof usersTable.$inferInsert = {
-      email: validatedFields.data.email,
-      name: validatedFields.data.name,
-      password: await bcrypt.hash(validatedFields.data.password, 10),
-    };
-
-    await db.insert(usersTable).values(user);
-    await signIn("credentials", formData);
-    return {
-      message: "Succès",
-    };
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        default:
-          return {
-            message: "Something went wrong.",
-          };
-      }
-    }
-    throw error;
+  if (existingUser !== undefined) {
+    return "error";
   }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user: typeof usersTable.$inferInsert = {
+    email: email,
+    name: name,
+    password: hashedPassword,
+    connexionMethod: "Credentials",
+  };
+
+  await db.insert(usersTable).values(user);
+
+  await loginCredential(email, password);
+
+  return "success";
 }
 
-export async function signout() {
-  await signOut();
-}
+export const logout = async () => {
+  await signOut({ redirectTo: "/login" });
+};

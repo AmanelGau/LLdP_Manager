@@ -105,6 +105,7 @@ const IdentityCard = ({ characterData, race, stats }: Props) => {
           <div>Magie : {characterData.magic}</div>
           <div>Religion : {characterData.religion} </div>
           <div>Nationnalité : {characterData.nationality}</div>
+          <div>Niveau : {characterData.level}</div>
         </>
       )}
       <ChevronDownIcon

@@ -1,4 +1,4 @@
-import ThemeSwitcher from "@/app/ui/themeSwitcher";
+import ThemeSwitcher from "@/ui/themeSwitcher";
 import React from "react";
 
 const page = () => {

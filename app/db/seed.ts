@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { raceBonusTable, raceTable, skillTable, usersTable } from "./schema";
 import { db } from "./index";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { races, skills } from "./basicData";
 
 async function populateUsers() {
@@ -48,6 +48,7 @@ async function populateRaces() {
         categorie: race.categorie,
         physique: race.physique,
         character: race.character,
+        // A ajouter
       })
       .onConflictDoNothing()
       .returning({ raceId: raceTable.id });

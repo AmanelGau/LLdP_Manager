@@ -8,22 +8,37 @@ import {
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { Button } from "../button";
-import { useActionState, useState } from "react";
-import { AuthActions } from "app/lib/actions";
+import { FormEventHandler, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signup } from "@/app/lib/actions/authActions";
 
 export default function LoginForm() {
-  const initialState: AuthActions.State = { message: null, errors: {} };
-  const [error, formAction, isPending] = useActionState(
-    AuthActions.signup,
-    initialState
-  );
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    setIsPending(true);
+    setError(null);
+
+    const res = await signup(email, name, password);
+
+    if (res === "error") {
+      setError("error");
+    }
+    setIsPending(false);
+  };
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div className="flex-1 rounded-lg bg-content1 px-6 pb-4 pt-8 dark:text-primary">
         <h1 className={`${lusitana.className} mb-3 text-2xl text-center `}>
-          Connexion
+          Création de compte
         </h1>
         <div className="w-full">
           <div>
@@ -39,6 +54,8 @@ export default function LoginForm() {
                 id="name"
                 type="name"
                 name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Entrer votre nom"
                 required
               />
@@ -58,6 +75,8 @@ export default function LoginForm() {
                 id="email"
                 type="email"
                 name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Entrer votre adresse e-mail"
                 required
               />
@@ -77,6 +96,8 @@ export default function LoginForm() {
                 id="password"
                 type="password"
                 name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Entrer votre mot de passe"
                 required
                 minLength={6}
@@ -86,16 +107,17 @@ export default function LoginForm() {
           </div>
         </div>
         <Button
-          className="mt-4 w-full justify-self-end "
           aria-disabled={isPending}
+          className="mt-4 w-full justify-self-end "
+          type="submit"
         >
           Valider
         </Button>
         <div className="flex h-8 items-end space-x-1">
-          {error.message && (
+          {error && (
             <>
               <ExclamationCircleIcon className="h-5 w-5 text-error" />
-              <p className="text-sm text-error">{error.message}</p>
+              <p className="text-sm text-error">{error}</p>
             </>
           )}
         </div>

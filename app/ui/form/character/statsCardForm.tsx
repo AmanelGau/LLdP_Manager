@@ -2,10 +2,23 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import Card from "../../card";
-import { statsTable } from "@/app/db/schema";
+import { raceBonusTable } from "@/app/db/schema";
 import { Tooltip } from "@nextui-org/react";
 
 interface Props {
+  level: number;
+  race: {
+    primaryRace?: typeof raceBonusTable.$inferSelect;
+    raceName: string;
+    race2?: {
+      id: string;
+      name: string;
+    };
+    race3?: {
+      id: string;
+      name: string;
+    };
+  };
   setForm: (action: { type: string; value: string }) => void;
   stats: {
     intelligence: string;
@@ -20,8 +33,9 @@ interface Props {
   };
 }
 
-const StatsCardForm = ({ stats, setForm }: Props) => {
+const StatsCardForm = ({ level, race, stats, setForm }: Props) => {
   const [points, setPoints] = useState<number>(90);
+  const [maxPoints, setMaxPoints] = useState<number>(14);
 
   const InputContainer = ({
     name,
@@ -70,25 +84,69 @@ const StatsCardForm = ({ stats, setForm }: Props) => {
         onBlur={(e) => setForm({ type: stat, value: e.target.value })}
         placeholder=""
         required
+        min={
+          (stat === "power" ? 1 : 5) +
+          (race.primaryRace?.stat1 === stat || race.primaryRace?.stat2 === stat
+            ? 1
+            : 0)
+        }
+        max={
+          maxPoints +
+          (race.primaryRace?.stat1 === stat || race.primaryRace?.stat2 === stat
+            ? 1
+            : 0)
+        }
       />
     );
   };
 
   useEffect(() => {
-    let newPoints = 90;
+    let newPoints = 90 + (race.primaryRace ? 2 : 0) + 2 * level;
+    if (level >= 9) {
+      newPoints++;
+      if (level === 10) {
+        newPoints += 2;
+      }
+    }
+
     Object.entries(stats).forEach((stat) => {
       if (stat[0] !== "id") {
         newPoints -= Number(stat[1]);
       }
     });
     setPoints(newPoints);
-  }, [stats]);
+    setMaxPoints(
+      level === 10
+        ? 18
+        : level >= 8
+        ? 17
+        : level >= 5
+        ? 16
+        : level >= 1
+        ? 15
+        : 14
+    );
+  }, [stats, level, race]);
 
   return (
     <Card className="grid grid-flow-row grid-cols-1 md:grid-cols-3 gap-2">
       <h3 className="text-center col-span-1 md:col-span-3">
         Points à répartir : {points}
       </h3>
+      {Object.entries(stats).filter(
+        (stat) =>
+          stat[0] !== "id" &&
+          Number(stat[1]) -
+            (race.primaryRace?.stat1 === stat[0] ||
+            race.primaryRace?.stat2 === stat[0]
+              ? 1
+              : 0) >=
+            maxPoints
+      ).length > 1 && (
+        <div className="text-red-500 text-center col-span-1 md:col-span-3">
+          Un trop grand nombre de stat actuellement au maximum ({maxPoints})
+        </div>
+      )}
       <InputContainer
         name="Intelligence"
         tooltipContent={

@@ -8,18 +8,45 @@ import {
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "../button";
-import { useActionState } from "react";
-import { AuthActions } from "@/app/lib/actions";
+import { FormEventHandler, useState } from "react";
 import Link from "next/link";
+import { Divider } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { loginCredential, loginGoogle } from "@/app/lib/actions/authActions";
+import GoogleSvg from "../svg/googleSvg";
 
 export default function LoginForm() {
-  const [errorMessage, formAction, isPending] = useActionState(
-    AuthActions.authenticate,
-    undefined
-  );
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    setIsPending(true);
+    setError(null);
+    console.log(email, password);
+
+    await loginCredential(email, password);
+
+    // const res = await signIn("credentials", {
+    //   redirect: false,
+    //   email,
+    //   password,
+    // });
+    // console.log(res);
+
+    // if (res?.error) {
+    //   setError(res.error);
+    // } else {
+    //   router.push("/");
+    // }
+    setIsPending(false);
+  };
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div className="flex-1 rounded-lg bg-content1 px-6 pb-4 pt-8 dark:text-primary">
         <h1 className={`${lusitana.className} mb-3 text-2xl text-center `}>
           Connexion
@@ -38,6 +65,8 @@ export default function LoginForm() {
                 id="email"
                 type="email"
                 name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Entrer votre adresse e-mail"
                 required
               />
@@ -57,6 +86,8 @@ export default function LoginForm() {
                 id="password"
                 type="password"
                 name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Entrer votre mot de passe"
                 required
                 minLength={6}
@@ -73,10 +104,10 @@ export default function LoginForm() {
           <ArrowRightIcon className="ml-auto h-5 w-5" />
         </Button>
         <div className="flex h-8 items-end space-x-1">
-          {errorMessage && (
+          {error && (
             <>
               <ExclamationCircleIcon className="h-5 w-5 text-error" />
-              <p className="text-sm text-error">{errorMessage}</p>
+              <p className="text-sm text-error">{error}</p>
             </>
           )}
         </div>
@@ -88,6 +119,19 @@ export default function LoginForm() {
             Mot de passe oublié ?
           </Link>
         </div>
+
+        <div className="flex gap-8 justify-center items-center">
+          <Divider className="w-[30%]" />
+          OU
+          <Divider className="w-[30%]" />
+        </div>
+        <button
+          className="flex items-center grow justify-self-center m-4 rounded-3xl px-6 h-12 border-2 border-primary gap-4 font-bold text-primary-foreground hover:bg-primary/70"
+          onClick={() => loginGoogle()}
+        >
+          <GoogleSvg className="w-8 h-8" />
+          Connexion avec Google
+        </button>
       </div>
     </form>
   );

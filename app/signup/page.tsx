@@ -1,5 +1,5 @@
 import LldpLogo from "@/app/ui/lldp-logo";
-import SignuForm from "@/app/ui/form/signupForm";
+import SignupForm from "@/app/ui/form/signupForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function LoginPage() {
         <div className="flex h-20 w-full items-end rounded-lg p-3">
           <LldpLogo height={370} width={600} />
         </div>
-        <SignuForm />
+        <SignupForm />
       </div>
     </main>
   );

@@ -204,6 +204,18 @@ const IdentityCardForm = ({
           placeholder=""
         />
       </InputContainer>
+      <InputContainer name="Niveau *">
+        <input
+          defaultValue={character?.level}
+          className="peer block w-32 rounded-md border p-2 text-sm outline-2 border-content2 bg-background text-foreground"
+          id="level"
+          type="number"
+          name="level"
+          onBlur={(e) => setForm({ type: "level", value: e.target.value })}
+          placeholder=""
+          required
+        />
+      </InputContainer>
     </Card>
   );
 };

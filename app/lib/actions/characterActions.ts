@@ -39,7 +39,7 @@ export interface CharacterType {
 
 const CharacterFormSchema = z.object({
   id: z.string().uuid(),
-  user: z.string().uuid(),
+  user: z.string(),
   lastName: z.string(),
   forename: z.string(),
   composure: z.number(),
@@ -58,6 +58,7 @@ const CharacterFormSchema = z.object({
   nationality: z.string(),
   relations: z.string().uuid(),
   stats: z.string().uuid(),
+  level: z.number(),
 });
 
 const CreateCharacter = CharacterFormSchema.omit({ id: true });
@@ -118,6 +119,7 @@ export async function modifyCharacter(characterModificationForm: {
     life: number;
     mana: number;
     fitness: number;
+    level: string;
   };
   relations: {
     id: string;
@@ -219,6 +221,7 @@ export async function modifyCharacter(characterModificationForm: {
         Number(characterModificationForm.stats.force) +
           Number(characterModificationForm.stats.agility)
       ),
+      level: Number(characterForm.get("level")),
     });
 
     if (!validatedFields.success) {
@@ -244,6 +247,7 @@ export async function modifyCharacter(characterModificationForm: {
       life: validatedFields.data.life,
       mana: validatedFields.data.mana,
       fitness: validatedFields.data.fitness,
+      level: validatedFields.data.level,
     };
 
     await db
@@ -278,6 +282,7 @@ export async function insertCharacter(
       life: number;
       mana: number;
       fitness: number;
+      level: string;
     };
     relations: {
       close: string;
@@ -376,6 +381,7 @@ export async function insertCharacter(
         Number(characterModificationForm.stats.force) +
         Number(characterModificationForm.stats.agility),
       composure: 20,
+      level: Number(characterForm.get("level")),
     });
 
     if (!validatedFields.success) {
@@ -405,6 +411,7 @@ export async function insertCharacter(
       life: validatedFields.data.life,
       mana: validatedFields.data.mana,
       fitness: validatedFields.data.fitness,
+      level: validatedFields.data.level,
     };
 
     const result = await db

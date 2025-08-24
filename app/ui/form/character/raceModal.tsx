@@ -289,7 +289,7 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
             : "")}
       </Link>
       {showRace && (
-        <div className="fixed z-20 backdrop-blur-sm inset-0 overflow-y-auto h-full w-full flex items-center justify-center">
+        <div className="fixed z-20 backdrop-blur-xs inset-0 overflow-y-auto h-full w-full flex items-center justify-center">
           <div className="p-8 w-[75%] h-[80%] shadow-lg rounded-md bg-content1">
             <div className="h-full flex flex-col justify-between text-center">
               <h3 className="text-2xl font-bold text-primary">Races</h3>
@@ -531,7 +531,7 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
                                 </div>
                               ))}
                           </div>
-                          <div className="flex-grow">ET</div>
+                          <div className="grow">ET</div>
                           <div className="mx-[10%] flex items-start flex-col">
                             {primaryRace.bonus
                               .filter(
@@ -596,13 +596,13 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
               <div className="flex justify-center mt-4 gap-4">
                 {/* Navigates back to the base URL - closing the modal */}
                 <button
-                  className="px-4 py-2 bg-success-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  className="px-4 py-2 bg-success-500 text-white text-base font-medium rounded-md shadow-xs hover:bg-gray-400 focus:outline-hidden focus:ring-2 focus:ring-gray-300"
                   onClick={onValidate}
                 >
                   Valider
                 </button>
                 <Link
-                  className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md shadow-xs hover:bg-gray-400 focus:outline-hidden focus:ring-2 focus:ring-gray-300"
                   href={pathname}
                 >
                   Annuler
