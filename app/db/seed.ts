@@ -70,7 +70,7 @@ export async function GET() {
   try {
     await populateUsers();
     await populateSkills();
-    await populateRaces();
+    // await populateRaces();
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
