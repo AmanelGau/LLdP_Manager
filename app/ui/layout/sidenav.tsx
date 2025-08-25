@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import RelationSvg from "../svg/relationSvg";
 import SpellAndTechniqueSvg from "../svg/spellAndTechniqueSvg";
 
-const sidenav = () => {
+const sidenav: React.FC = () => {
   const pathname = usePathname();
 
   return (

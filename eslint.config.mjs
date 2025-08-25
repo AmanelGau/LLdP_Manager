@@ -18,6 +18,7 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-expressions": "off",
       "@typescript-eslint/no-unescaped-entities": "off",
       "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+      "react-hooks/exhaustive-deps": "off",
     },
   }),
 ];

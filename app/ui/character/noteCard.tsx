@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../card";
+import Image from "next/image";
 
 interface Props {
   imageUrl: string | null;
@@ -11,7 +12,7 @@ const NoteCard = ({ imageUrl }: Props) => {
       <Card className="mt-0"></Card>
       <Card className="mt-0">
         {imageUrl && (
-          <img
+          <Image
             className="w-full"
             src={`/upload/${imageUrl}`}
             alt="Image représentatnt le personnage"

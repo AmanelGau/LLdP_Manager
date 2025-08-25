@@ -91,7 +91,7 @@ const IdentityCard = ({ characterData, race, stats }: Props) => {
         &nbsp; / {maxFitness}
       </div>
       <div>Seuil de Blessure : {stats.constitution} </div>
-      <div>Seuil d'Absence : {Math.floor(stats.will / 2)} </div>
+      <div>Seuil d&apos;Absence : {Math.floor(stats.will / 2)} </div>
       <div>Seuil de fatigue : {Math.floor(stats.constitution / 2)} </div>
       {isOpen && (
         <>

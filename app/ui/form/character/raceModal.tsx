@@ -467,6 +467,7 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
                                       ? "bg-primary/80 text-primary-foreground"
                                       : ""
                                   )}
+                                  key={type}
                                   onClick={() => {
                                     if (type !== raceForm.type) {
                                       onTypeChange(type);
@@ -495,7 +496,10 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
                                   array.indexOf(value) === index
                               )
                               .map((bonus) => (
-                                <div className="flex items-center my-1">
+                                <div
+                                  key={bonus}
+                                  className="flex items-center my-1"
+                                >
                                   <input
                                     className="border-1 border-primary text-primary w-5 h-5 bg-content2/80 mr-2"
                                     name="stat1"
@@ -545,7 +549,10 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
                                   array.indexOf(value) === index
                               )
                               .map((bonus) => (
-                                <div className="flex items-center my-1">
+                                <div
+                                  key={bonus}
+                                  className="flex items-center my-1"
+                                >
                                   <input
                                     className="border-1 border-primary text-primary w-5 h-5 bg-content2/80 mr-2"
                                     disabled={

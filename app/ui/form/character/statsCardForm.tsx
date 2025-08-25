@@ -151,7 +151,7 @@ const StatsCardForm = ({ level, race, stats, setForm }: Props) => {
         name="Intelligence"
         tooltipContent={
           <>
-            Détermine le niveau d'intelligence de votre personnage
+            Détermine le niveau d&apos;intelligence de votre personnage
             <br /> et augmente son mana max.
             <br /> Influe sur les connaissances de votre personnage.
           </>
@@ -227,7 +227,7 @@ const StatsCardForm = ({ level, race, stats, setForm }: Props) => {
         name="Agilité"
         tooltipContent={
           <>
-            Détermine le niveau d'agilité de votre personnages
+            Détermine le niveau d&apos;agilité de votre personnages
             <br /> et augmente sa forme max.
           </>
         }
@@ -239,7 +239,7 @@ const StatsCardForm = ({ level, race, stats, setForm }: Props) => {
         tooltipContent={
           <>
             Détermine le niveau de sociable de votre personnage.
-            <br /> Influe sur l'image (hors physique) que renvoit votre
+            <br /> Influe sur l&apos;image (hors physique) que renvoit votre
             personnage aux autres.
           </>
         }
@@ -263,7 +263,7 @@ const StatsCardForm = ({ level, race, stats, setForm }: Props) => {
         tooltipContent={
           <>
             La quantité maximale de forme de votre personnage (force + agilité).
-            <br /> La forme permet d'utiliser des techniques de formes.
+            <br /> La forme permet d&apos;utiliser des techniques de formes.
           </>
         }
       >

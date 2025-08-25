@@ -1,9 +1,9 @@
 export function convertToFormData(object: {
   [key: string]: string | undefined;
 }) {
-  let form_data = new FormData();
+  const form_data = new FormData();
 
-  for (let key in object) {
+  for (const key in object) {
     const value = object[key];
     if (value !== undefined) form_data.append(key, value);
   }

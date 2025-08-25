@@ -17,7 +17,7 @@ import { Key } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "@/app/lib/actions/authActions";
 
-const burgerMenu = () => {
+const burgerMenu: React.FC = () => {
   const router = useRouter();
 
   const handleAction = (key: Key) => {
