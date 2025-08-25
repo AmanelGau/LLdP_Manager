@@ -40,10 +40,8 @@ export async function modifyStats(
   statsForm: FormData,
   tx?: PgTransaction<
     NeonHttpQueryResultHKT,
-    typeof import("c:/Users/yohga/Desktop/Dev/LLdP_Manager/app/db/schema"),
-    ExtractTablesWithRelations<
-      typeof import("c:/Users/yohga/Desktop/Dev/LLdP_Manager/app/db/schema")
-    >
+    typeof import("@/app/db/schema"),
+    ExtractTablesWithRelations<typeof import("@/app/db/schema")>
   >
 ) {
   try {
@@ -97,10 +95,8 @@ export async function insertStats(
   statsForm: FormData,
   tx?: PgTransaction<
     NeonHttpQueryResultHKT,
-    typeof import("c:/Users/yohga/Desktop/Dev/LLdP_Manager/app/db/schema"),
-    ExtractTablesWithRelations<
-      typeof import("c:/Users/yohga/Desktop/Dev/LLdP_Manager/app/db/schema")
-    >
+    typeof import("@/app/db/schema"),
+    ExtractTablesWithRelations<typeof import("@/app/db/schema")>
   >
 ) {
   try {
