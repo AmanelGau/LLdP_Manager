@@ -17,7 +17,7 @@ import { Key } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "@/app/lib/actions/authActions";
 
-const burgerMenu: React.FC = () => {
+const BurgerMenu = () => {
   const router = useRouter();
 
   const handleAction = (key: Key) => {
@@ -77,4 +77,4 @@ const burgerMenu: React.FC = () => {
   );
 };
 
-export default burgerMenu;
+export default BurgerMenu;

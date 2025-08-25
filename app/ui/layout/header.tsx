@@ -3,7 +3,7 @@ import LldpLogo from "../lldp-logo";
 import BurgerMenu from "./burgerMenu";
 import Link from "next/link";
 
-const header = async () => {
+const Header = async () => {
   const session = await auth();
 
   return (
@@ -19,4 +19,4 @@ const header = async () => {
   );
 };
 
-export default header;
+export default Header;
