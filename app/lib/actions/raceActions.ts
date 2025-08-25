@@ -91,10 +91,8 @@ export async function modifyCharacterRaceLink(
   raceForm: FormData,
   tx?: PgTransaction<
     NeonHttpQueryResultHKT,
-    typeof import("c:/Users/yohga/Desktop/Dev/LLdP_Manager/app/db/schema"),
-    ExtractTablesWithRelations<
-      typeof import("c:/Users/yohga/Desktop/Dev/LLdP_Manager/app/db/schema")
-    >
+    typeof import("@/app/db/schema"),
+    ExtractTablesWithRelations<typeof import("@/app/db/schema")>
   >
 ) {
   try {
