@@ -24,6 +24,18 @@ export const usersTable = pgTable("users", {
   connexionMethod: varchar({ length: 255 }).notNull().default("Credentials"),
 });
 
+export const roleEnum = pgEnum("roleEnum", ["user", "admin", "game master"]);
+
+export const usersRoleLinkTable = pgTable("usersRoleLink", {
+  id: uuid()
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  user: text("userId")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  role: roleEnum().notNull(),
+});
+
 export const accounts = pgTable(
   "account",
   {
@@ -235,8 +247,8 @@ export const raceBonusTable = pgTable("raceBonusTable", {
     .references(() => raceTable.id)
     .notNull(),
   type: varchar({ length: 255 }).notNull(),
-  stat1: statEnum(),
-  stat2: statEnum(),
+  stat1: statEnum().notNull(),
+  stat2: statEnum().notNull(),
   bloodMax: integer(),
   bloodMin: integer(),
 });

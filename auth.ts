@@ -3,7 +3,7 @@ import NextAuth, { Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
-import { getUser } from "./app/lib/actions/authActions";
+import { getRoles, getUser } from "./app/[locale]/lib/actions/authActions";
 import { authConfig } from "./auth.config";
 import { db } from "./app/db";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
@@ -62,6 +62,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
+      const roles = await getRoles(token.id as string);
       return {
         ...session,
         user: {
@@ -69,6 +70,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           id: token.id as string,
           role: token.role as string,
         },
+        role: roles,
       };
     },
   },
