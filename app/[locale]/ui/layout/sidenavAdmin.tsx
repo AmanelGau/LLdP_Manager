@@ -1,11 +1,13 @@
 "use client";
 
+import { useI18n } from "@/app/local/client";
 import CharacterSvg from "../svg/characterSvg";
 import SidenavLink from "./sidenavLink";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
 const SidenavAdmin = () => {
+  const t = useI18n();
   const pathname = usePathname();
 
   return (
@@ -21,7 +23,7 @@ const SidenavAdmin = () => {
             })}
           />
         }
-        label="Races"
+        label={t("race.plural")}
         link="/admin/races"
       />
     </div>
