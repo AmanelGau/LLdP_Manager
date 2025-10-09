@@ -26,7 +26,7 @@ export default {
     validate: "Valider",
   },
   character: {
-    "": "Personnage",
+    single: "Personnage",
     absence_threshold: "Seuil d'absence",
     age: "Age",
     change_character: "Changer de personnage",
@@ -69,19 +69,19 @@ export default {
     wound_threshold: "Seuil de blessure",
   },
   guild: {
-    "": "Guilde",
+    single: "Guilde",
   },
   inventory: {
-    "": "Inventaire",
+    single: "Inventaire",
   },
   market: {
-    "": "Marché",
+    single: "Marché",
   },
   pet: {
-    "": "Familier & monture",
+    single: "Familier & monture",
   },
   race: {
-    "": "Race",
+    single: "Race",
     add: "Ajouter une race",
     appearance: "Apparence",
     blood_cross: "Croisé",
@@ -101,8 +101,8 @@ export default {
     type: "Type",
     type_placeholder: "Choisit une famille des sang",
   },
-  relations: {
-    "": "Relations",
+  relation: {
+    plural: "Relations",
   },
   stat: {
     agility: "Agilité",
@@ -136,7 +136,7 @@ export default {
       "Détermine le niveau de volonté de votre personnage.\nInflue sur la perception de votre personnage.",
   },
   technique_spell: {
-    "": "Sorts et Techniques",
+    plural: "Sorts et Techniques",
     active: "Actif",
     passive: "Passif",
   },

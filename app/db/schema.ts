@@ -135,6 +135,7 @@ export const characterTable = pgTable("character", {
   magic: varchar({ length: 255 }),
   religion: varchar({ length: 255 }),
   nationality: varchar({ length: 255 }).notNull(),
+  size: varchar({ length: 255 }),
   relations: uuid()
     .references(() => relationsTable.id)
     .notNull(),

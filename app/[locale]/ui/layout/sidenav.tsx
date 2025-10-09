@@ -27,7 +27,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("character")}
+        label={t("character.single")}
         link="/character"
       />
       <SidenavLink
@@ -39,7 +39,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("inventory")}
+        label={t("inventory.single")}
         link="/inventory"
       />
       <SidenavLink
@@ -53,7 +53,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("technique_spell")}
+        label={t("technique_spell.plural")}
         link="/spellsAndTechniques"
       />
       <SidenavLink
@@ -65,7 +65,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("pet")}
+        label={t("pet.single")}
         link="/pet"
       />
       <SidenavLink
@@ -77,7 +77,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("guild")}
+        label={t("guild.single")}
         link="/guild"
       />
       <SidenavLink
@@ -89,7 +89,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("market")}
+        label={t("market.single")}
         link="/market"
       />
       <SidenavLink
@@ -101,7 +101,7 @@ const Sidenav = () => {
             })}
           />
         }
-        label={t("relations")}
+        label={t("relation.plural")}
         link="/relations"
       />
     </div>

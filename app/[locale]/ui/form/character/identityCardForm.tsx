@@ -116,7 +116,7 @@ const IdentityCardForm = ({
           required
         />
       </InputContainer>
-      <InputContainer name={`${t("race")} *`}>
+      <InputContainer name={`${t("race.single")} *`}>
         <RaceModal
           charRace={charRace}
           primeBlood={primeBlood}

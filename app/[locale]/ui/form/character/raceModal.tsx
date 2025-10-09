@@ -398,7 +398,7 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
                           <div className="flex justify-center flex-wrap gap-8">
                             <InputContainer
                               className="w-16"
-                              name={`${t("race")} 2`}
+                              name={`${t("race.single")} 2`}
                             >
                               <select
                                 onChange={(e) =>
@@ -430,7 +430,7 @@ const RaceModal = ({ charRace, primeBlood, races, setForm }: Props) => {
                             {raceForm.purity === "Sang-mêlée" && (
                               <InputContainer
                                 className="w-16"
-                                name={`${t("race")} 3`}
+                                name={`${t("race.single")} 3`}
                               >
                                 <select
                                   onChange={(e) =>

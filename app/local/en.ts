@@ -26,7 +26,7 @@ export default {
     validate: "Validate",
   },
   character: {
-    "": "Character",
+    single: "Character",
     absence_threshold: "Absence threshold",
     age: "Age",
     change_character: "Change character",
@@ -69,19 +69,19 @@ export default {
     wound_threshold: "Wound threshold",
   },
   guild: {
-    "": "Guild",
+    single: "Guild",
   },
   inventory: {
-    "": "Inventory",
+    single: "Inventory",
   },
   market: {
-    "": "Market",
+    single: "Market",
   },
   pet: {
-    "": "Pet & mount",
+    single: "Pet & mount",
   },
   race: {
-    "": "Race",
+    single: "Race",
     add: "Add a new race",
     appearance: "Appearence",
     blood_cross: "Crossbred",
@@ -101,8 +101,8 @@ export default {
     type: "Type",
     type_placeholder: "Choose a blood familly",
   },
-  relations: {
-    "": "Relations",
+  relation: {
+    plural: "Relations",
   },
   stat: {
     agility: "Agility",
@@ -135,7 +135,7 @@ export default {
       "Determine the will level of your character.\nInfluances your character's perception.",
   },
   technique_spell: {
-    "": "Spells & Techniques",
+    plural: "Spells & Techniques",
     active: "Active",
     passive: "Passive",
   },

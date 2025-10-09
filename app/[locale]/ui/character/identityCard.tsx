@@ -116,7 +116,7 @@ const IdentityCard = ({ characterData, race, stats }: Props) => {
             {t("character.sex")}&nbsp;:&nbsp;{characterData.sex}
           </div>
           <div>
-            {t("race")}&nbsp;:&nbsp;{race}
+            {t("race.single")}&nbsp;:&nbsp;{race}
           </div>
           <div>
             {t("character.jobGroup")}&nbsp;:&nbsp;{characterData.jobGroup}
